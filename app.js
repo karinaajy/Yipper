@@ -54,7 +54,7 @@ app.get('/yipper/user/:user', async (req, res) => {
 
 /** Endpoint 3: Update the likes for a designated yip, increase it by one and return current likes; */
 app.post('/yipper/likes', async (req, res) => {
-  if (!req.body?.id) {
+  if (!req.body.id) {
     res.type('txt').status(400).send('Missing one or more of the required params.');
   } else {
     try {
@@ -82,7 +82,7 @@ app.post('/yipper/likes', async (req, res) => {
 /** Endpoint 4: Post a new yip. Create a new yip, save in database and return the new yip object */
 app.post('/yipper/new', async (req, res) => {
   let { name, full } = req.body || {};
-  let [yip, hashtag] = full.split(' #');
+  let [yip, hashtag] = full ? [] : [...full.split(' #')];
   if (!(name && yip && hashtag)) {
     res.type('txt').status(400).send('Missing one or more of the required params.');
   } else {
@@ -127,4 +127,3 @@ async function getDBConnection() {
   });
   return db;
 }
-
