@@ -124,7 +124,7 @@ function postNewYip() {
     .then((res) => {
       if (res.status !== SUCCESS_CODE) {
         return res.text().then((text) => {
-          new Error(text);
+          throw new Error(text);
         });
       }
       return res.json();
@@ -201,7 +201,7 @@ function heartOnClick(event, id) {
         return res.text().then((text) => {
           throw new Error(text);
         });
-      } 
+      }
       return res.json();
     })
     .then((data) => {
@@ -231,7 +231,7 @@ function handleFetchError() {
  * @param {Node} parent : The node to remove all children from.
  */
 function removeAllChildNodes(parent) {
-  while (parent.firstChild) {
+  while (parent.firstChild) {   
     parent.removeChild(parent.firstChild);
   }
 }
@@ -246,7 +246,7 @@ function createYipCard(yip) {
     <article class='card' id='${yip.id}'>
       <img src='/img/${yip.name.toLowerCase().replaceAll(' ', '-')}.png'>
       <div>
-        <p class='individual' onclick='nameOnClick("${yip.name}")'>${yip.name}</p>
+        <p class='individual'>${yip.name}</p>
         <p>${yip.yip} #${yip.hashtag}</p>
       </div>
       <div class='meta'>
@@ -260,6 +260,10 @@ function createYipCard(yip) {
   `;
   const div = document.createElement('div');
   div.innerHTML = htmlString.trim();
+  let pElement = div.getElementsByClassName('individual')[0];
+  pElement.onclick = function() {
+    nameOnClick(yip.name);
+  }
   return div.firstChild;
 }
 
