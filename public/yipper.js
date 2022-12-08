@@ -231,7 +231,7 @@ function handleFetchError() {
  * @param {Node} parent : The node to remove all children from.
  */
 function removeAllChildNodes(parent) {
-  while (parent.firstChild) {   
+  while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
   }
 }
@@ -252,7 +252,7 @@ function createYipCard(yip) {
       <div class='meta'>
         <p>${new Date(yip.date).toLocaleString()}</p>
         <div>
-          <img src = '/img/heart.png' onclick='heartOnClick(event,"${yip.id}")'>
+          <img src = '/img/heart.png' class='like'>
           <p>${yip.likes}</p>
         </div>
       </div>
@@ -261,9 +261,13 @@ function createYipCard(yip) {
   const div = document.createElement('div');
   div.innerHTML = htmlString.trim();
   let pElement = div.getElementsByClassName('individual')[0];
+  let imgElement = div.getElementsByClassName('like')[0];
   pElement.onclick = function() {
     nameOnClick(yip.name);
-  }
+  };
+  imgElement.onclick = function(event) {
+    heartOnClick(event, yip.id);
+  };
   return div.firstChild;
 }
 
