@@ -1,0 +1,22 @@
+{
+  "name": "hw4-yipper-yjy1114",
+  "version": "1.0.0",
+  "description": "*Special thanks to Tal Wolman for the original version of this assignment and to Robert Thompson for the original concept behind this assignment.*",
+  "main": "app.js",
+  "scripts": {
+    "start": "node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://gitlab.cs.washington.edu/cse154-22au-students/hw4-yipper-yjy1114.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.18.2",
+    "path": "^0.12.7",
+    "sqlite": "^4.1.2",
+    "sqlite3": "^5.1.2"
+  }
+}
