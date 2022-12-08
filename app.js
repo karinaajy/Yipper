@@ -12,7 +12,7 @@ const {open} = require('sqlite');
 const sqlite3 = require('sqlite3');
 const path = require('path');
 const LOCAL_PORT = 3002;
-const [SUCCESS_CODE, BAD_REQUEST_CODE, SERVER_ERROR_CODE] = [200,400,500];
+const [SUCCESS_CODE, BAD_REQUEST_CODE, SERVER_ERROR_CODE] = [200, 400, 500];
 
 const app = express();
 const PORT = process.env.PORT || LOCAL_PORT;
@@ -29,16 +29,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.get('/yipper/yips', async (req, res) => {
   try {
     let db = await getDBConnection();
-    let sqlString = req.query.search ? 
-    `SELECT id FROM yips WHERE yip LIKE '%${req.query.search}%' ORDER BY id` :
-    `SELECT * FROM yips ORDER BY DATETIME(date) DESC`;
+    let sqlString = req.query.search ?
+      `SELECT id FROM yips WHERE yip LIKE '%${req.query.search}%' ORDER BY id` :
+      `SELECT * FROM yips ORDER BY DATETIME(date) DESC`;
     let rows = await db.all(sqlString);
     await db.close();
     res.type('json').status(SUCCESS_CODE)
-    .send({yips: rows});
+      .send({yips: rows});
   } catch (err) {
     res.type('txt').status(SERVER_ERROR_CODE)
-    .send(SERVER_ERROR_MESSAGE);
+      .send(SERVER_ERROR_MESSAGE);
   }
 });
 
@@ -46,27 +46,30 @@ app.get('/yipper/yips', async (req, res) => {
 app.get('/yipper/user/:user', async (req, res) => {
   try {
     let db = await getDBConnection();
-    let sqlString = `SELECT name, yip, hashtag, date FROM yips WHERE name = '${req.params.user}' ORDER BY DATETIME(date) DESC`;
+    let sqlString = `SELECT name, yip, hashtag, date FROM yips WHERE `;
+    sqlString += `name = '${req.params.user}' ORDER BY DATETIME(date) DESC`;
     let rows = await db.all(sqlString);
     await db.close();
     if (rows.length === 0) {
       res.type('txt').status(BAD_REQUEST_CODE)
-      .send(`Yikes. User does not exist.`);
+        .send(`Yikes. User does not exist.`);
     } else {
       res.type('json').status(SUCCESS_CODE)
-      .send(rows);
+        .send(rows);
     }
   } catch (err) {
     res.type('txt').status(SERVER_ERROR_CODE)
-    .send(SERVER_ERROR_MESSAGE);
+      .send(SERVER_ERROR_MESSAGE);
   }
 });
 
-/** Endpoint 3: Update the likes for a designated yip, increase it by one and return current likes; */
+/** Endpoint 3: Update the likes for a designated yip, 
+ * increase it by one and return current likes; 
+ * */
 app.post('/yipper/likes', async (req, res) => {
   if (!req.body.id) {
     res.type('txt').status(BAD_REQUEST_CODE)
-    .send('Missing one or more of the required params.');
+      .send('Missing one or more of the required params.');
   } else {
     try {
       let db = await getDBConnection();
@@ -75,13 +78,12 @@ app.post('/yipper/likes', async (req, res) => {
       if (!row) {
         await db.close();
         res.type('txt').status(BAD_REQUEST_CODE)
-        .send(`Yikes. ID does not exist.`);
+          .send(`Yikes. ID does not exist.`);
       } else {
         let sqlString2 = `UPDATE yips SET likes = ? WHERE id = ?`;
         await db.run(sqlString2, [row.likes + 1, req.body.id]);
         await db.close();
-        res
-          .type('txt')
+        res.type('txt')
           .status(SUCCESS_CODE)
           .send(`${row.likes + 1}`);
       }
@@ -140,7 +142,7 @@ app.listen(PORT, function() {
 async function getDBConnection() {
   const db = await open({
     filename: 'yipper.db',
-    driver: sqlite3.Database,
+    driver: sqlite3.Database
   });
   return db;
 }
