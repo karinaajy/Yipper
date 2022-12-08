@@ -82,7 +82,7 @@ app.post('/yipper/likes', async (req, res) => {
 /** Endpoint 4: Post a new yip. Create a new yip, save in database and return the new yip object */
 app.post('/yipper/new', async (req, res) => {
   let { name, full } = req.body || {};
-  let [yip, hashtag] = full ? [] : [...full.split(' #')];
+  let [yip, hashtag] = full ? [...full.split(' #')] : [];
   if (!(name && yip && hashtag)) {
     res.type('txt').status(400).send('Missing one or more of the required params.');
   } else {
@@ -90,7 +90,7 @@ app.post('/yipper/new', async (req, res) => {
       let db = await getDBConnection();
       let sqlString = `SELECT id FROM yips WHERE name = '${name}'`;
       let result = await db.get(sqlString);
-      if (!result?.id) {
+      if (!result.id) {
         await db.close();
         res.type('txt').status(400).send('Yikes. User does not exist.');
       } else {
