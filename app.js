@@ -67,7 +67,7 @@ app.get('/yipper/user/:user', async (req, res) => {
 /**
  * Endpoint 3: Update the likes for a designated yip,
  * increase it by one and return current likes;
- * */
+ */
 app.post('/yipper/likes', async (req, res) => {
   if (!req.body.id) {
     res.type('txt').status(BAD_REQUEST_CODE)
@@ -133,10 +133,7 @@ app.get('*', function(req, res) {
   res.type('html').sendFile(path.join(__dirname, './public/yipper.html'));
 });
 
-app.listen(PORT, function() {
-  // console.log(`🌎 ==> API server now on port ${PORT}!`);
-  // console.log(`🌎 ==> http://localhost:${PORT}`);
-});
+app.listen(PORT);
 
 /**
  * Helper function: Return a promise to connect to sqlite database.

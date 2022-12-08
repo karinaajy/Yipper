@@ -124,7 +124,7 @@ function postNewYip() {
     .then((res) => {
       if (res.status !== SUCCESS_CODE) {
         return res.text().then((text) => {
-          let err = new Error(text);
+          new Error(text);
         });
       }
       return res.json();
@@ -194,7 +194,7 @@ function heartOnClick(event, id) {
   fetch(`${baseUrl}/yipper/likes`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify({id}),
+    body: JSON.stringify({id})
   })
     .then((res) => {
       if (res.status !== SUCCESS_CODE) {
@@ -226,9 +226,10 @@ function handleFetchError() {
   document.getElementById('yip-btn').disabled = true;
 }
 
-/** Utility function to remove all child nodes of a node.
+/**
+ * Utility function to remove all child nodes of a node.
  * @param {Node} parent : The node to remove all children from.
-*/
+ */
 function removeAllChildNodes(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
@@ -264,7 +265,7 @@ function createYipCard(yip) {
 
 /**
  * Utility function to create an yip's card html string with an yip object.
- * @param {Array.<Object>} yips - An array of yip object with name, yip(text), hashtag, date and likes.
+ * @param {Array.<Object>} yips - An array of yip object.
  * @returns {string} Html string of this user's yips.
  */
 function createUserYips(yips) {
