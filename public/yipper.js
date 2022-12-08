@@ -5,27 +5,29 @@
  * The client-side data and functions.
  * Handles all events on the page, fetches/posts data from/to the server-side.
  */
+"use strict";
 
 const baseUrl = 'http://localhost:3002';
 const allYips = [];
+const SUCCESS_CODE = 200;
 
 window.onload = () => {
   setAllYips();
 
-  document.getElementById('yip-btn').onclick = function () {
+  document.getElementById('yip-btn').onclick = function() {
     openNewYipPage();
   };
 
-  document.getElementById('search-btn').onclick = function () {
+  document.getElementById('search-btn').onclick = function() {
     setFilteredYips();
   };
 
-  document.getElementById('home-btn').onclick = function () {
+  document.getElementById('home-btn').onclick = function() {
     openHomePage();
   };
 
-  document.getElementById('search-term').oninput = function () {
-    document.getElementById('search-btn').disabled = this.value.trim() === '' ? true : false;
+  document.getElementById('search-term').oninput = function() {
+    document.getElementById('search-btn').disabled = this.value.trim() === '';
   };
 
   document.querySelector('form button').onclick = (event) => {
@@ -38,13 +40,12 @@ window.onload = () => {
 function setAllYips() {
   fetch(baseUrl + '/yipper/yips')
     .then((res) => {
-      if (res.status !== 200) {
+      if (res.status !== SUCCESS_CODE) {
         return res.text().then((text) => {
           throw new Error(text);
         });
-      } else {
-        return res.json();
       }
+      return res.json();
     })
     .then((res) => {
       allYips.push(...res.yips);
@@ -63,13 +64,12 @@ function setFilteredYips() {
   let search = document.getElementById('search-term').value.trim();
   fetch(`${baseUrl}/yipper/yips?search=${search}`)
     .then((res) => {
-      if (res.status !== 200) {
+      if (res.status !== SUCCESS_CODE) {
         return res.text().then((text) => {
           throw new Error(text);
         });
-      } else {
-        return res.json();
       }
+      return res.json();
     })
     .then((res) => {
       let filteredIds = res.yips.map((yip) => yip.id);
@@ -118,34 +118,42 @@ function postNewYip() {
   };
   fetch(`${baseUrl}/yipper/new`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
+    headers: {'Content-Type': 'application/json'},
     body: JSON.stringify(body),
   })
     .then((res) => {
-      if (res.status !== 200) {
+      if (res.status !== SUCCESS_CODE) {
         return res.text().then((text) => {
           new Error(text);
         });
-      } else {
-        return res.json();
       }
+      return res.json();
     })
     .then((data) => {
-      allYips.push(data);
-      let newYip = createYipCard(data);
-      document.getElementById('home').prepend(newYip);
-      document.querySelector('form button').disabled = true;
-      document.getElementById('name').value = '';
-      document.getElementById('yip').value = '';
-      setTimeout(() => {
-        document.getElementById('new').classList.add('hidden');
-        document.getElementById('home').classList.remove('hidden');
-        document.querySelector('form button').disabled = false;
-      }, 2000);
+      setNewYip(data);
     })
     .catch(() => {
       handleFetchError();
     });
+}
+
+
+/**
+ * Utility function to set new yip and show the home page.
+ * @param {object} data - The new yip.
+ */
+function setNewYip(data) {
+  allYips.push(data);
+  let newYip = createYipCard(data);
+  document.getElementById('home').prepend(newYip);
+  document.querySelector('form button').disabled = true;
+  document.getElementById('name').value = '';
+  document.getElementById('yip').value = '';
+  setTimeout(() => {
+    document.getElementById('new').classList.add('hidden');
+    document.getElementById('home').classList.remove('hidden');
+    document.querySelector('form button').disabled = false;
+  }, 2000);
 }
 
 /**
@@ -155,13 +163,13 @@ function postNewYip() {
 function nameOnClick(name) {
   fetch(`${baseUrl}/yipper/user/${name}`)
     .then((res) => {
-      if (res.status !== 200) {
+      if (res.status !== SUCCESS_CODE) {
         return res.text().then((text) => {
           throw new Error(text);
         });
-      } else {
-        return res.json();
       }
+      return res.json();
+
     })
     .then((yips) => {
       document.getElementById('search-term').value = '';
@@ -178,7 +186,8 @@ function nameOnClick(name) {
 }
 
 /**
- * Utility function to like a yip (post request to increase the likes of clicked yip by one and update the page accordingly).
+ * Utility function to like a yip
+ * - post request to increase the likes of clicked yip by one and update the page accordingly.
  * @param {object} event - The click event object.
  * @param {string} id - The clicked yip's id.
  */
@@ -186,17 +195,16 @@ function heartOnClick(event, id) {
   console.log('event: ', typeof event);
   fetch(`${baseUrl}/yipper/likes`, {
     method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ id }),
+    headers: {'Content-Type': 'application/json'},
+    body: JSON.stringify({id}),
   })
     .then((res) => {
-      if (res.status !== 200) {
+      if (res.status !== SUCCESS_CODE) {
         return res.text().then((text) => {
           throw new Error(text);
         });
-      } else {
-        return res.json();
-      }
+      } 
+      return res.json();
     })
     .then((data) => {
       event.target.nextElementSibling.textContent = data;
@@ -206,7 +214,11 @@ function heartOnClick(event, id) {
     });
 }
 
-/** Utility function to handle all fetch error, display error message, disable buttons and hide yipper data.*/
+/** Utility function to
+ * - handle all fetch error
+ * - display error message
+ * - disable buttons and hide yipper data.
+ * */
 function handleFetchError() {
   document.getElementById('yipper-data').classList.add('hidden');
   document.getElementById('error').classList.remove('hidden');
@@ -215,7 +227,9 @@ function handleFetchError() {
   document.getElementById('yip-btn').disabled = true;
 }
 
-/** Utility function to remove all child nodes of a node. */
+/** Utility function to remove all child nodes of a node. 
+ * @param {Node} parent : The node to remove all children from.
+*/
 function removeAllChildNodes(parent) {
   while (parent.firstChild) {
     parent.removeChild(parent.firstChild);
@@ -258,8 +272,8 @@ function createUserYips(yips) {
   let htmlString = `
     <article class='single'>
       <h2>Yips shared by ${yips[0].name}</h2>`;
-  for (const [i, v] of yips.entries()) {
-    htmlString += `<p> Yip ${i + 1}: ${v.yip} #${v.hashtag}</p>`;
+  for (const [index, value] of yips.entries()) {
+    htmlString += `<p> Yip ${index + 1}: ${value.yip} #${value.hashtag}</p>`;
   }
   htmlString += `</article>`;
   const div = document.createElement('div');
