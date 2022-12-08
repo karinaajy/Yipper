@@ -82,7 +82,7 @@ app.post('/yipper/likes', async (req, res) => {
 /** Endpoint 4: Post a new yip. Create a new yip, save in database and return the new yip object */
 app.post('/yipper/new', async (req, res) => {
   let { name, full } = req.body || {};
-  let { yip, hashtag } = full || {};
+  let [yip, hashtag] = full.split(' #');
   if (!(name && yip && hashtag)) {
     res.type('txt').status(400).send('Missing one or more of the required params.');
   } else {

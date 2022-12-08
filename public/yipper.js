@@ -112,14 +112,9 @@ function openHomePage() {
 
 /** Post a new yip, clear input and after 2 seconds, hide the yip page and show the home page */
 function postNewYip() {
-  let yip = document.getElementById('yip').value.split(' #')[0] || '';
-  let hashtag = document.getElementById('yip').value.split(' #')[1] || '';
   let body = {
     name: document.getElementById('name').value.trim(),
-    full: {
-      yip: yip.trim(),
-      hashtag: hashtag.trim(),
-    },
+    full: document.getElementById('yip').value.trim(),
   };
   fetch(`${baseUrl}/yipper/new`, {
     method: 'POST',
@@ -249,7 +244,7 @@ function createYipCard(yip) {
       </div>
     </article>
   `;
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   div.innerHTML = htmlString.trim();
   return div.firstChild;
 }
@@ -267,7 +262,7 @@ function createUserYips(yips) {
     htmlString += `<p> Yip ${i + 1}: ${v.yip} #${v.hashtag}</p>`;
   }
   htmlString += `</article>`;
-  var div = document.createElement('div');
+  const div = document.createElement('div');
   div.innerHTML = htmlString.trim();
   return div.firstChild;
 }
