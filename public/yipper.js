@@ -114,17 +114,17 @@ function openHomePage() {
 function postNewYip() {
   let body = {
     name: document.getElementById('name').value.trim(),
-    full: document.getElementById('yip').value.trim(),
+    full: document.getElementById('yip').value.trim()
   };
   fetch(`${baseUrl}/yipper/new`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
-    body: JSON.stringify(body),
+    body: JSON.stringify(body)
   })
     .then((res) => {
       if (res.status !== SUCCESS_CODE) {
         return res.text().then((text) => {
-          new Error(text);
+          let err = new Error(text);
         });
       }
       return res.json();
@@ -136,7 +136,6 @@ function postNewYip() {
       handleFetchError();
     });
 }
-
 
 /**
  * Utility function to set new yip and show the home page.
@@ -192,7 +191,6 @@ function nameOnClick(name) {
  * @param {string} id - The clicked yip's id.
  */
 function heartOnClick(event, id) {
-  console.log('event: ', typeof event);
   fetch(`${baseUrl}/yipper/likes`, {
     method: 'POST',
     headers: {'Content-Type': 'application/json'},
@@ -214,11 +212,12 @@ function heartOnClick(event, id) {
     });
 }
 
-/** Utility function to
+/**
+ * Utility function to
  * - handle all fetch error
  * - display error message
  * - disable buttons and hide yipper data.
- * */
+ */
 function handleFetchError() {
   document.getElementById('yipper-data').classList.add('hidden');
   document.getElementById('error').classList.remove('hidden');
@@ -227,7 +226,7 @@ function handleFetchError() {
   document.getElementById('yip-btn').disabled = true;
 }
 
-/** Utility function to remove all child nodes of a node. 
+/** Utility function to remove all child nodes of a node.
  * @param {Node} parent : The node to remove all children from.
 */
 function removeAllChildNodes(parent) {
@@ -265,7 +264,7 @@ function createYipCard(yip) {
 
 /**
  * Utility function to create an yip's card html string with an yip object.
- * @param {object} yip - An array of yip object with name, yip(text), hashtag, date and likes.
+ * @param {Array.<Object>} yips - An array of yip object with name, yip(text), hashtag, date and likes.
  * @returns {string} Html string of this user's yips.
  */
 function createUserYips(yips) {

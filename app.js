@@ -23,7 +23,8 @@ app.use(express.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 
-/** Endpoint 1: Get all yip data or yip data matching a given search term,
+/**
+ * Endpoint 1: Get all yip data or yip data matching a given search term,
  * return all yips or all ids of yips who matches the given search term.
  */
 app.get('/yipper/yips', async (req, res) => {
@@ -63,8 +64,9 @@ app.get('/yipper/user/:user', async (req, res) => {
   }
 });
 
-/** Endpoint 3: Update the likes for a designated yip, 
- * increase it by one and return current likes; 
+/**
+ * Endpoint 3: Update the likes for a designated yip,
+ * increase it by one and return current likes;
  * */
 app.post('/yipper/likes', async (req, res) => {
   if (!req.body.id) {
@@ -89,7 +91,7 @@ app.post('/yipper/likes', async (req, res) => {
       }
     } catch (err) {
       res.type('txt').status(SERVER_ERROR_CODE)
-      .send(SERVER_ERROR_MESSAGE);
+        .send(SERVER_ERROR_MESSAGE);
     }
   }
 });
@@ -100,7 +102,7 @@ app.post('/yipper/new', async (req, res) => {
   let [yip, hashtag] = full ? [...full.split(' #')] : [];
   if (!(name && yip && hashtag)) {
     res.type('txt').status(BAD_REQUEST_CODE)
-    .send('Missing one or more of the required params.');
+      .send('Missing one or more of the required params.');
   } else {
     try {
       let db = await getDBConnection();
@@ -109,18 +111,19 @@ app.post('/yipper/new', async (req, res) => {
       if (!result.id) {
         await db.close();
         res.type('txt').status(BAD_REQUEST_CODE)
-        .send('Yikes. User does not exist.');
+          .send('Yikes. User does not exist.');
       } else {
-        let sqlString2 = `INSERT INTO yips ("name", "yip", "hashtag","likes") VALUES ("${name}", "${yip}", "${hashtag}", 0)`;
+        let sqlString2 = `INSERT INTO yips ("name", "yip", "hashtag","likes") `;
+        sqlString2 += `VALUES ("${name}", "${yip}", "${hashtag}", 0)`;
         let result2 = await db.run(sqlString2);
         let sqlString3 = `SELECT * FROM yips WHERE id = ${result2.lastID}`;
         let result3 = await db.get(sqlString3);
         res.type('json').status(SUCCESS_CODE)
-        .send(result3);
+          .send(result3);
       }
     } catch (err) {
       res.type('txt').status(SERVER_ERROR_CODE)
-      .send(SERVER_ERROR_MESSAGE);
+        .send(SERVER_ERROR_MESSAGE);
     }
   }
 });
@@ -131,8 +134,8 @@ app.get('*', function(req, res) {
 });
 
 app.listen(PORT, function() {
-  console.log(`🌎 ==> API server now on port ${PORT}!`);
-  console.log(`🌎 ==> http://localhost:${PORT}`);
+  // console.log(`🌎 ==> API server now on port ${PORT}!`);
+  // console.log(`🌎 ==> http://localhost:${PORT}`);
 });
 
 /**
