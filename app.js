@@ -130,7 +130,7 @@ app.post('/yipper/new', async (req, res) => {
 
 /** Endpoint: Show the main page */
 app.get('*', function(req, res) {
-  res.type('html').sendFile(path.join(__dirname, './public/yipper.html'));
+  res.type('html').sendFile(path.join(__dirname, '.index.html'));
 });
 
 app.listen(PORT);
